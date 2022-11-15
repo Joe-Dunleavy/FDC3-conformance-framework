@@ -71,12 +71,14 @@ export default () =>
           notifyAppAOnCompletion: true,
         };
 
+        console.log("opening mock");
         //Open ChannelsApp then execute commands in order
         await fdc3.open(
           "ChannelsApp",
           buildChannelsAppContext(channelsAppCommands, channelsAppConfig)
         );
 
+        console.log("mock opened");
         //wait for ChannelsApp to execute
         await resolveExecutionCompleteListener;
 

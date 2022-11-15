@@ -301,6 +301,7 @@ const waitForContext = (
         );
         resolve(context);
         if (executionListener) executionListener.unsubscribe();
+        return;
       }
     };
 
@@ -343,6 +344,7 @@ const waitForContext = (
             );
             if (executionListener) executionListener.unsubscribe();
             resolve(context);
+            return;
           }
         }
       };
