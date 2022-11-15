@@ -55,6 +55,8 @@ const advancedSuite_1_2 = [
 const allSuites_1_2 = [...basicSuite_1_2, ...advancedSuite_1_2];
 
 export const packs: { [index: string]: (() => Suite)[] } = {
+  "fdc3GetInfo 2.0": [fdc3GetInfo_2_0],
+  "fdc3Broadcast 2.0": [fdc3Broadcast_2_0],
   "All 1.2": allSuites_1_2,
   "Basic 1.2": basicSuite_1_2,
   "Advanced 1.2": advancedSuite_1_2,
