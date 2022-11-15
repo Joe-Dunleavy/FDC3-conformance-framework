@@ -4,8 +4,7 @@ import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
 import { Context } from "fdc3_2_0";
 import constants from "../../../constants";
 
-const fdc3 = <DesktopAgent>(<unknown>window.fdc3);
-
+declare let fdc3: DesktopAgent;
 const getMetadataDocs =
   "\r\nDocumentation: " + APIDocumentation.appMetadata + "\r\nCause";
 let timeout: number;

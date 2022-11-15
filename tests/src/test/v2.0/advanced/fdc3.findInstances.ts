@@ -3,9 +3,8 @@ import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
 import { Context } from "fdc3_2_0";
 import constants from "../../../constants";
-import { resolveObjectURL } from "buffer";
 
-const fdc3 = <DesktopAgent>(<unknown>window.fdc3);
+declare let fdc3: DesktopAgent;
 const findInstancesDocs =
   "\r\nDocumentation: " + APIDocumentation.findInstances + "\r\nCause";
 let timeout: number;

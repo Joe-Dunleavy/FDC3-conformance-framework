@@ -5,7 +5,7 @@ import { Context } from "fdc3_2_0";
 import constants from "../../../constants";
 import { validateAppMetadata } from "../advanced/fdc3.getAppMetadata";
 
-const fdc3 = <DesktopAgent>(<unknown>window.fdc3);
+declare let fdc3: DesktopAgent;
 const getInfoDocs =
   "\r\nDocumentation: " + APIDocumentation.getInfo2_0 + "\r\nCause";
 const getMetadataDocs =
