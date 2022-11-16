@@ -31,7 +31,9 @@ export default () =>
       try {
         const implMetadata = await fdc3.getInfo();
         expect(implMetadata, getInfoDocs).to.have.property("fdc3Version");
-        expect(Number(implMetadata.fdc3Version)).to.be.greaterThanOrEqual(2);
+        expect(parseFloat(implMetadata.fdc3Version)).to.be.greaterThanOrEqual(
+          2
+        );
         expect(implMetadata, getInfoDocs).to.have.property("provider");
         expect(implMetadata.provider).to.not.be.equal("");
         expect(implMetadata.optionalFeatures, getInfoDocs).to.have.property(
