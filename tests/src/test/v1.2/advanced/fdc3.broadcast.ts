@@ -4,7 +4,7 @@ import constants from "../../../constants";
 import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_1_2/dist/api/DesktopAgent";
 
-declare let fdc3 : DesktopAgent
+declare let fdc3: DesktopAgent;
 
 const documentation =
   "\r\nDocumentation: " + APIDocumentation.desktopAgent + "\r\nCause:";

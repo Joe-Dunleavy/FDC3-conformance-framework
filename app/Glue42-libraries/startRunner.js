@@ -224,7 +224,7 @@
 
 		const config = { applications, channels };
 
-		const { glue } = await window.GlueWebPlatform(config);
+		const { glue } = await GlueWebPlatform(config);
 
 		window.glue = glue;
 

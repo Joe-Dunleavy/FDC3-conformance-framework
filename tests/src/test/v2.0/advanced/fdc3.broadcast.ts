@@ -1085,7 +1085,10 @@ export default () =>
     };
 
     function validateListenerObject(listenerObject) {
-      assert.isObject(listenerObject, "No listener object found");
+      assert.isTrue(
+        listenerObject && typeof listenerObject === "object",
+        "No listener object found"
+      );
       expect(typeof listenerObject.unsubscribe).to.be.equals(
         "function",
         "Listener does not contain an unsubscribe method"
@@ -1173,9 +1176,15 @@ export default () =>
         };
 
         if (channel === undefined) {
-          executionListener = await fdc3.addContextListener(contextType, handler);
+          executionListener = await fdc3.addContextListener(
+            contextType,
+            handler
+          );
         } else {
-          executionListener = await channel.addContextListener(contextType, handler);
+          executionListener = await channel.addContextListener(
+            contextType,
+            handler
+          );
           //App channels do not auto-broadcast current context when you start listening, so retrieve current context to avoid races
           const ccHandler = async (context: AppControlContext) => {
             if (context) {

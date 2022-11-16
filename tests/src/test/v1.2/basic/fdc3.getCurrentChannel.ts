@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
 
-declare let fdc3 : DesktopAgent
+declare let fdc3: DesktopAgent;
 const getCurrentChannelDocs =
   "\r\nDocumentation: " + APIDocumentation.getCurrentChannel + "\r\nCause";
 

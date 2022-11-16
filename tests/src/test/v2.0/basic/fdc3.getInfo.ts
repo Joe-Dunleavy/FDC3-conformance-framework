@@ -27,7 +27,7 @@ export default () =>
       }
     });
 
-    it("(DA metadata) Returns a valid ImplementationMetadata object ", async () => {
+    it("(DA metadata) Returns a valid ImplementationMetadata object", async () => {
       try {
         const implMetadata = await fdc3.getInfo();
         expect(implMetadata, getInfoDocs).to.have.property("fdc3Version");
