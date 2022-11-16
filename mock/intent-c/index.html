@@ -13,8 +13,8 @@
     <script type="module">
       onFdc3Ready().then(async () => {
         await closeWindowOnCompletion(window.fdc3);
-        window.fdc3.addIntentListener('cTestingIntent', (context) => {
-          return new Promise<Context>((resolve) => resolve(context));
+        window.fdc3.addIntentListener('cTestingIntent', async (context) => {
+          return context;
         });
         window.fdc3.joinChannel("fdc3.raiseIntent").then(() => {
           window.fdc3.broadcast({

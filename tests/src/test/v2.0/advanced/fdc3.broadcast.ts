@@ -3,11 +3,11 @@ import { assert, expect } from "chai";
 import constants from "../../../constants";
 import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
+import { sleep, wait } from "../../../utils";
 
 declare let fdc3: DesktopAgent;
 const documentation =
   "\r\nDocumentation: " + APIDocumentation.desktopAgent + "\r\nCause:";
-let timeout: number;
 
 interface AppControlContext extends Context {
   testId: string;
@@ -489,6 +489,7 @@ export default () =>
         "(UCFilteredContext6) Should not receive context when A & B join different user channels and app B broadcasts a listened type";
       it(scTestId9, async () => {
         const errorMessage = `\r\nSteps to reproduce:\r\n- App A adds fdc3.instrument and fdc3.contact context listener\r\n- App A joins channel 2\r\n- App B joins channel 1\r\n- App B broadcasts both context types${documentation}`;
+        let timeout;
 
         //Add fdc3.instrument context listener
         listener = await fdc3.addContextListener(
@@ -528,8 +529,10 @@ export default () =>
           buildChannelsAppContext(channelsAppCommands, channelsAppConfig)
         );
 
-        //Give listener time to receive context
-        await wait();
+          //Give listener time to receive context
+          const { promise: sleepPromise, timeout: theTimeout } = sleep();
+          timeout = theTimeout;
+        });
       });
 
       const scTestId10 =
@@ -590,6 +593,7 @@ export default () =>
         "(UCFilteredContext8) Should not receive context when joining two different user channels before app B broadcasts the listened type to the first channel that was joined";
       it(scTestId11, async () => {
         const errorMessage = `\r\nSteps to reproduce:\r\n- App A adds context listener of type fdc3.instrument\r\n- App A joins channel 1\r\n- App A joins channel 2\r\n- App B joins channel 1\r\n- App B broadcasts context of type fdc3.instrument${documentation}`;
+        let timeout;
 
         //Add fdc3.instrument context listener
         listener = await fdc3.addContextListener(
@@ -619,15 +623,17 @@ export default () =>
           buildChannelsAppContext(channelsAppCommands, channelsAppConfig)
         );
 
-        //Give listener time to receive context
-        await wait();
+          //Give listener time to receive context
+          const { promise: sleepPromise, timeout: theTimeout } = sleep();
+          timeout = theTimeout;
+          await sleepPromise;
       });
 
       const scTestId12 =
         "(UCFilteredContext9) Should not receive context when joining and then leaving a user channel before app B broadcasts the listened type to the same channel";
       it(scTestId12, async () => {
         const errorMessage = `\r\nSteps to reproduce:\r\n- App A adds context listener of type fdc3.instrument\r\n- App A joins channel 1\r\n- App A leaves channel 1\r\n- App B joins channel 1\r\n- App B broadcasts context of type fdc3.instrument${documentation}`;
-
+        let timeout;
         //Add a context listeners to app A
         listener = await fdc3.addContextListener(
           "fdc3.instrument",
@@ -661,10 +667,11 @@ export default () =>
           buildChannelsAppContext(channelsAppCommands, channelsAppConfig)
         );
 
-        //Give listener time to receive context
-        await wait();
+          //Give listener time to receive context
+          const { promise: sleepPromise, timeout: theTimeout } = sleep();
+          timeout = theTimeout;
+          await sleepPromise;
       });
-    });
 
     describe("App channels", () => {
       beforeEach(async () => {
@@ -839,7 +846,7 @@ export default () =>
         "(ACFilteredContext2) Should not receive context when app B broadcasts context to a different app channel";
       it(acTestId7, async () => {
         const errorMessage = `\r\nSteps to reproduce:\r\n- App A retrieves an app channel\r\n- App A adds a context listener of type fdc3.instrument\r\n- App B retrieves a different app channel\r\n- App B broadcasts a context of type fdc3.instrument${documentation}`;
-
+        let timeout;
         //Retrieve an app channel
         const testChannel = await fdc3.getOrCreateChannel(
           "a-different-test-channel"
@@ -872,7 +879,9 @@ export default () =>
         );
 
         //Give listener time to receive context
-        await wait();
+        const { promise: sleepPromise, timeout: theTimeout } = sleep();
+          timeout = theTimeout;
+          await sleepPromise;
       });
 
       const acTestId6 =
@@ -893,7 +902,6 @@ export default () =>
         //Add context listener
         listener = await testChannel.addContextListener(null, (context) => {
           assert.fail(`${errorMessage} ${context.type} context received`);
-          return;
         });
 
         validateListenerObject(listener);
@@ -1086,7 +1094,7 @@ export default () =>
 
     function validateListenerObject(listenerObject) {
       assert.isTrue(
-        listenerObject && typeof listenerObject === "object",
+        typeof listenerObject === "object",
         "No listener object found"
       );
       expect(typeof listenerObject.unsubscribe).to.be.equals(
@@ -1095,20 +1103,13 @@ export default () =>
       );
     }
 
-    async function wait() {
-      return new Promise((resolve) => {
-        timeout = window.setTimeout(() => {
-          resolve(true);
-        }, constants.WaitTime);
-      });
-    }
-
     async function closeChannelsAppWindow(testId: string) {
       //Tell ChannelsApp to close window
       const appControlChannel = await broadcastAppChannelCloseWindow(testId);
 
       //Wait for ChannelsApp to respond
       await waitForContext("windowClosed", testId, appControlChannel);
+      await wait(constants.WindowCloseWaitTime);
     }
 
     const broadcastAppChannelCloseWindow = async (testId: string) => {
