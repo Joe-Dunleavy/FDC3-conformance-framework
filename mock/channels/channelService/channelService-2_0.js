@@ -7,7 +7,6 @@ class Fdc3CommandExecutor2_0 {
 
     //close ChannelsApp when test is complete
     await this.closeWindowOnCompletion(config.testId);
-
     for (const command of orderedCommands) {
       switch (command) {
         case "joinUserChannelOne": {
@@ -45,10 +44,13 @@ class Fdc3CommandExecutor2_0 {
     }
   }
 
-  async joinUserChannelOne() {
-    const channels = await window.fdc3.getUserChannels();
-    await window.fdc3.joinUserChannel(channels[0].id);
-    return channels[0];
+  async joinRetrievedUserChannel(channelId) {
+    const systemChannels = await window.fdc3.getSystemChannels();
+    const joinedChannel = systemChannels.find((c) => c.id === channelId);
+    if(joinedChannel){
+      await window.fdc3.joinChannel(channelId);
+      return joinedChannel;
+    }
   }
 
   //retrieve/create "test-channel" app channel
