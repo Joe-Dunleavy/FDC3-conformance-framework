@@ -4,6 +4,7 @@ import constants from "../../../constants";
 import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_1_2/dist/api/DesktopAgent";
 import { sleep, wait } from "../../../utils";
+import { ChannelsAppConfig, Commands } from "../../../types";
 
 declare let fdc3: DesktopAgent;
 const documentation =
@@ -39,37 +40,39 @@ export default () =>
         "(UCBasicUsage1) Should receive context when adding a listener then joining a user channel before app B broadcasts context to the same channel";
       it(scTestId1, async () => {
         const errorMessage = `\r\nSteps to reproduce:\r\n- Add fdc3.instrument context listener to app A\r\n- App A joins channel 1\r\n- App B joins channel 1\r\n- App B broadcasts fdc3.instrument context${documentation}`;
-
+        console.log("REACHED");
         //Listen for when ChannelsApp execution is complete
         const resolveExecutionCompleteListener = waitForContext(
           "executionComplete",
           scTestId1,
           await fdc3.getOrCreateChannel("app-control")
         );
-
+        console.log("REACHED");
         //Add context listener
         let receivedContext = false;
         listener = fdc3.addContextListener(null, async (context) => {
           expect(context.type).to.be.equals("fdc3.instrument", errorMessage);
           receivedContext = true;
         });
-
+        console.log("REACHED");
         validateListenerObject(listener);
 
         //Join system channel 1
         const channel = await retrieveAndJoinChannel(1);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
-
+        console.log("REACHED");
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId1,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
+
+        console.log("REACHED");
 
         //Open ChannelsApp then execute commands in order
         await fdc3.open(
@@ -112,15 +115,15 @@ export default () =>
         validateListenerObject(listener);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId2,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -154,15 +157,15 @@ export default () =>
         const channel = await getUserChannel(1);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId3,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -219,16 +222,16 @@ export default () =>
         const channel = await retrieveAndJoinChannel(1);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId4,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -292,16 +295,16 @@ export default () =>
         const channel = await retrieveAndJoinChannel(1);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId5,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -348,9 +351,9 @@ export default () =>
         await fdc3.joinChannel(channels[0].id);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
@@ -400,15 +403,15 @@ export default () =>
         }
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: scTestId7,
           userChannelId: channel.id,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -444,8 +447,8 @@ export default () =>
         await fdc3.joinChannel(channels[1].id);
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
@@ -483,8 +486,8 @@ export default () =>
         await fdc3.leaveCurrentChannel();
 
         const channelsAppCommands = [
-          commands.joinRetrievedUserChannel,
-          commands.broadcastInstrumentContext,
+          Commands.joinRetrievedUserChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
@@ -540,14 +543,14 @@ export default () =>
         validateListenerObject(listener);
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -581,14 +584,14 @@ export default () =>
         );
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId2,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -643,15 +646,15 @@ export default () =>
         validateListenerObject(listener);
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId4,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -708,15 +711,15 @@ export default () =>
         validateListenerObject(listener2);
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId5,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -774,15 +777,15 @@ export default () =>
         listener.unsubscribe();
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId6,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -816,14 +819,14 @@ export default () =>
         validateListenerObject(listener);
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId7,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -865,14 +868,14 @@ export default () =>
         validateListenerObject(listener);
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId8,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -894,9 +897,9 @@ export default () =>
         const testChannel = await fdc3.getOrCreateChannel("test-channel");
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
@@ -939,15 +942,15 @@ export default () =>
         );
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId10,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
           historyItems: 2,
         };
 
@@ -986,15 +989,15 @@ export default () =>
         );
 
         const channelsAppCommands = [
-          commands.retrieveTestAppChannel,
-          commands.broadcastInstrumentContext,
-          commands.broadcastContactContext,
+          Commands.retrieveTestAppChannel,
+          Commands.broadcastInstrumentContext,
+          Commands.broadcastContactContext,
         ];
 
         const channelsAppConfig: ChannelsAppConfig = {
           fdc3ApiVersion: "1.2",
           testId: acTestId11,
-          notifyAppAOnCompletion: true,
+          notifyTestAppOnCompletion: true,
         };
 
         //Open ChannelsApp then execute commands in order
@@ -1171,19 +1174,11 @@ type ChannelsAppContext = Context & {
   commands: string[];
   config: {
     testId: string;
-    notifyAppAOnCompletion: boolean;
+    notifyTestAppOnCompletion: boolean;
     historyItems: number;
     fdc3ApiVersion: string;
     userChannelId: string;
   };
-};
-
-type ChannelsAppConfig = {
-  fdc3ApiVersion: string;
-  testId: string;
-  userChannelId?: string;
-  notifyAppAOnCompletion?: boolean;
-  historyItems?: number;
 };
 
 function buildChannelsAppContext(
@@ -1196,16 +1191,16 @@ function buildChannelsAppContext(
     config: {
       fdc3ApiVersion: config.fdc3ApiVersion,
       testId: config.testId,
-      notifyAppAOnCompletion: config.notifyAppAOnCompletion ?? false,
+      notifyTestAppOnCompletion: config.notifyTestAppOnCompletion ?? false,
       historyItems: config.historyItems ?? 1,
       userChannelId: config.userChannelId ?? null,
     },
   };
 }
 
-const commands = {
-  joinRetrievedUserChannel: "joinRetrievedUserChannel",
-  retrieveTestAppChannel: "retrieveTestAppChannel",
-  broadcastInstrumentContext: "broadcastInstrumentContext",
-  broadcastContactContext: "broadcastContactContext",
-};
+// const commands = {
+//   joinRetrievedUserChannel: "joinRetrievedUserChannel",
+//   retrieveTestAppChannel: "retrieveTestAppChannel",
+//   broadcastInstrumentContext: "broadcastInstrumentContext",
+//   broadcastContactContext: "broadcastContactContext",
+// };

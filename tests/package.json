@@ -6,10 +6,9 @@
   "typings": "lib/index.d.ts",
   "module": "src/index.ts",
   "scripts": {
-    "build": "yarn run build:prettier && yarn run build:webpack && yarn run build:copy",
+    "build": "yarn run build:prettier && yarn run build:copy",
     "build:copy": "npx copyfiles --exclude **/*.ts --flat src/*.* lib/",
     "build:prettier": "prettier --write ./src/**/*.ts",
-    "build:webpack": "webpack build",
     "start": "live-server build",
     "test": "test"
   },
