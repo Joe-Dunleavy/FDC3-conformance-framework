@@ -7,13 +7,15 @@
     "copy:intent:b": "npx copyfiles --flat ./mock-functions.js intent-b/lib",
     "copy:intent:c": "npx copyfiles --flat ./mock-functions.js intent-c/lib",
     "copy:channels": "npx copyfiles --flat ./mock-functions.js channels/lib",
-    "build": "npm-run-all copy:general copy:intent:a copy:intent:b copy:intent:c copy:channels",
+    "copy:metadata": "npx copyfiles --flat ./mock-functions.js metadata/lib",
+    "build": "npm-run-all copy:general copy:intent:a copy:intent:b copy:intent:c copy:channels copy:metadata",
     "start:general": "npx http-server ./general -p 3001 -c-1",
     "start:intent:a": "npx http-server ./intent-a -p 3100 -c-1",
     "start:intent:b": "npx http-server ./intent-b -p 3101 -c-1",
     "start:intent:c": "npx http-server ./intent-c -p 3102 -c-1",
     "start:channels": "npx http-server ./channels -p 3103 -c-1",
-    "start": "npm-run-all -p start:general start:intent:a start:intent:b start:intent:c start:channels"
+    "start:metadata": "npx http-server ./metadata -p 3104 -c-1",
+    "start": "npm-run-all -p start:general start:intent:a start:intent:b start:intent:c start:channels start:metadata"
   },
   "license": "Apache-2.0",
   "devDependencies": {

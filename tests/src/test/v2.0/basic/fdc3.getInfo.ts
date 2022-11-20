@@ -5,6 +5,8 @@ import { Context } from "fdc3_2_0";
 import constants from "../../../constants";
 import { validateAppMetadata } from "../advanced/fdc3.getAppMetadata";
 import { sleep } from "../../../utils";
+import { ImplementationMetadata } from "fdc3_2_0";
+import { getOrCreateChannel } from "fdc3_1_2";
 
 declare let fdc3: DesktopAgent;
 const getInfoDocs =
@@ -25,65 +27,103 @@ export default () =>
             (ex.message ?? ex)
         );
       }
+
+      after(async () => {
+        await broadcastCloseWindow();
+        await waitForMockAppToClose();
+      });
     });
 
     it("(DA metadata) Returns a valid ImplementationMetadata object", async () => {
       try {
         const implMetadata = await fdc3.getInfo();
-        expect(implMetadata, getInfoDocs).to.have.property("fdc3Version");
+        expect(
+          implMetadata,
+          `ImplementationMetadata did not have property fdc3Version${getInfoDocs}`
+        ).to.have.property("fdc3Version");
         expect(parseFloat(implMetadata.fdc3Version)).to.be.greaterThanOrEqual(
           2
         );
-        expect(implMetadata, getInfoDocs).to.have.property("provider");
+        expect(
+          implMetadata,
+          `ImplementationMetadata did not have property provider${getInfoDocs}`
+        ).to.have.property("provider");
         expect(implMetadata.provider).to.not.be.equal("");
-        expect(implMetadata.optionalFeatures, getInfoDocs).to.have.property(
-          "OriginatingAppMetadata"
-        );
-        expect(implMetadata.optionalFeatures, getInfoDocs).to.have.property(
-          "UserChannelMembershipAPIs"
-        );
-        if (
-          typeof implMetadata.optionalFeatures.OriginatingAppMetadata !==
-          "boolean"
-        ) {
-          assert.fail(
-            "ImplementationMetadata.optionalFeatures.OriginatingAppMetadata should be of type boolean"
-          );
-        } else if (
-          typeof implMetadata.optionalFeatures.UserChannelMembershipAPIs !==
-          "boolean"
-        ) {
-          assert.fail(
-            "ImplementationMetadata.optionalFeatures.UserChannelMembershipAPIs should be of type boolean"
-          );
-        }
+        expect(
+          implMetadata.optionalFeatures,
+          `ImplementationMetadata.optionalFeatures did not have property OriginatingAppMetadata${getInfoDocs}`
+        ).to.have.property("OriginatingAppMetadata");
+        expect(
+          implMetadata.optionalFeatures,
+          `ImplementationMetadata.optionalFeatures did not have property UserChannelMembershipAPIs${getInfoDocs}`
+        ).to.have.property("UserChannelMembershipAPIs");
+        expect(
+          typeof implMetadata.optionalFeatures.OriginatingAppMetadata,
+          `ImplementationMetadata.optionalFeatures.OriginatingAppMetadata should be of type boolean`
+        ).to.be.equal("boolean");
+        expect(
+          typeof implMetadata.optionalFeatures.UserChannelMembershipAPIs,
+          "ImplementationMetadata.optionalFeatures.UserChannelMembershipAPIs should be of type boolean"
+        ).to.be.equal("boolean");
       } catch (ex) {
         assert.fail(getInfoDocs + (ex.message ?? ex));
       }
     });
 
     it("(own AppMetadata) Returns a valid ImplementationMetadata object", async () => {
+      let timeout;
+      let contextReceived = false;
+      const appControlChannel = await getOrCreateChannel("app-control");
+      appControlChannel.addContextListener(
+        "metadataContext",
+        (context: metadataContext) => {
+          contextReceived = true;
+          const implMetadata = context.implMetadata;
+          expect(
+            implMetadata,
+            `ImplementationMetadata did not have property appMetadata${getInfoDocs}`
+          ).to.have.property("appMetadata");
+          expect(
+            implMetadata.appMetadata,
+            `ImplementationMetadata did not have property appId${getInfoDocs}`
+          ).to.have.property("appId");
+          expect(
+            implMetadata.appMetadata,
+            `ImplementationMetadata did not have property instanceId${getInfoDocs}`
+          ).to.have.property("instanceId");
+          expect(
+            implMetadata.appMetadata.appId,
+            `ImplementationMetadata.appMetadata.appId did not match the ApplicationIdentifier.appId retrieved from the opened app`
+          ).to.be.equal(appIdentifier.appId);
+          expect(
+            implMetadata.appMetadata.instanceId,
+            `ImplementationMetadata.appMetadata.instanceId did not match the ApplicationIdentifier.instanceId retrieved from the opened app`
+          ).to.be.equal(appIdentifier.instanceId);
+          validateAppMetadata(implMetadata);
+          clearTimeout(timeout);
+        }
+      );
+
       const appIdentifier = await fdc3.open({
-        appId: "MockApp",
+        appId: "MetadataAppId",
       });
-      expect(appIdentifier).to.have.property("appId");
-      expect(appIdentifier).to.have.property("instanceId");
+      expect(
+        appIdentifier,
+        `AppIdentifier did not have property appId${getInfoDocs}`
+      ).to.have.property("appId");
+      expect(
+        appIdentifier,
+        `AppIdentifier did not have property instanceId${getInfoDocs}`
+      ).to.have.property("instanceId");
 
-      const implMetadata = await fdc3.getInfo();
-      expect(implMetadata, getInfoDocs).to.have.property("appMetadata");
-      expect(implMetadata.appMetadata, getInfoDocs).to.have.property("appId");
-      expect(implMetadata.appMetadata, getInfoDocs).to.have.property(
-        "instanceId"
-      );
-      expect(implMetadata.appMetadata.appId).to.be.equal(appIdentifier.appId);
-      expect(implMetadata.appMetadata.instanceId).to.be.equal(
-        appIdentifier.instanceId
-      );
+      //if no context received fail
+      const { promise: sleepPromise, timeout: theTimeout } = sleep();
+      timeout = theTimeout;
+      await sleepPromise;
 
-      validateAppMetadata(implMetadata);
-
-      await broadcastCloseWindow();
-      await waitForMockAppToClose();
+      if (contextReceived === false) {
+        assert.fail("ImplementationMetadata not received from the opened app");
+      }
     });
 
     async function waitForMockAppToClose() {
@@ -100,7 +140,7 @@ export default () =>
         );
 
         //if no context received reject promise
-        const {promise: sleepPromise, timeout: theTimeout} = sleep();
+        const { promise: sleepPromise, timeout: theTimeout } = sleep();
         timeout = theTimeout;
         await sleepPromise;
         reject(new Error("windowClosed context not received from app B"));
@@ -113,5 +153,8 @@ export default () =>
       const appControlChannel = await fdc3.getOrCreateChannel("app-control");
       await appControlChannel.broadcast({ type: "closeWindow" });
     };
-
   });
+
+interface metadataContext extends Context {
+  implMetadata: ImplementationMetadata;
+}

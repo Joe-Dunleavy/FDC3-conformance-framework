@@ -225,14 +225,14 @@
 					"description": "Testing spec conformance",
 					"type": "window",
 					"details": {
-						"url": "http://localhost:3104",
+						"url": "http://localhost:3004",
 						"top": 100,
 						"left": 100,
 						"width": 800,
 						"height": 600,
 						"icon": "http://localhost:3000/scott-logic-icon-256.png"
 					}
-				}
+				},
 			]
 		};
 
