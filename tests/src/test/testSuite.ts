@@ -18,10 +18,10 @@ import fdc3RaiseIntentForContext_1_2 from "./v1.2/basic/fdc3.raiseIntentForConte
 //import fdc3AddContextListener_2_0 from "./v2.0/fdc3.addContextListener";
 // import fdc3AddIntentListener_2_0 from "./v2.0/fdc3.addIntentListener";
 import fdc3Broadcast_2_0 from "./v2.0/advanced/fdc3.broadcast";
-// import fdc3FindIntent_2_0 from "./v2.0/fdc3.findIntent";
+import fdc3FindIntent_2_0 from "./v2.0/advanced/fdc3.findIntent";
 // import fdc3FindIntentsByContext_2_0 from "./v2.0/fdc3.findIntentsByContext";
 // import fdc3GetCurrentChannel_2_0 from "./v2.0/fdc3.getCurrentChannel";
-import fdc3GetInfo_2_0 from "./v2.0/basic/fdc3.getInfo";
+import fdc3GetInfo_2_0 from "./v2.0/advanced/fdc3.getInfo";
 import fdc3GetInstances_2_0 from "./v2.0/advanced/fdc3.findInstances";
 // import fdc3GetOrCreateChannel_2_0 from "./v2.0/fdc3.getOrCreateChannel";
 import fdc3GetUserChannels_2_0 from "./v2.0/basic/fdc3.getUserChannels";
@@ -55,7 +55,10 @@ const advancedSuite_1_2 = [
 const allSuites_1_2 = [...basicSuite_1_2, ...advancedSuite_1_2];
 
 export const packs: { [index: string]: (() => Suite)[] } = {
+  fdc3FindIntent_2_0: [fdc3FindIntent_2_0],
+  "fdc3getAppMetadata 2.0": [fdc3getAppMetadata_2_0],
   "fdc3GetInfo 2.0": [fdc3GetInfo_2_0],
+  "fdc3FindInstances 2.0": [fdc3GetInstances_2_0],
   "fdc3Broadcast 2.0": [fdc3Broadcast_2_0],
   "All 1.2": allSuites_1_2,
   "Basic 1.2": basicSuite_1_2,

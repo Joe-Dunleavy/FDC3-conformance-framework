@@ -14,16 +14,41 @@
   <script src="./Glue42-libraries/fdc3.umd.js"></script>
   <script src="./Glue42-libraries/startSupport.js"></script>
   <script>
+    let stats = document.getElementById("context");
+    stats.innerHTML += "start/ ";
     onFdc3Ready().then(async () => {
       await closeWindowOnCompletion(window.fdc3);
-      const implMetadata = await fdc3.getInfo();
-      const metadataContext = {
-        type: "metadataContext",
-        implMetadata: implMetadata
-      }
-      
-      sendContextToTests(metadataContext);
+
+      //get context from tests
+      await window.fdc3.addContextListener(
+        "metadataAppContext",
+        async (context) => {
+          stats.innerHTML = `context = ${JSON.stringify(context)}/ `;
+
+          //execute command from test app and send back metad
+          if (context.command === "sendGetInfoMetadataToTests") {
+            stats.innerHTML += "inside sendgetinfo/ ";
+            stats.innerHTML += "start/ ";
+            const implMetadata = await fdc3.getInfo();
+            const metadataContext = {
+              type: "metadataContext",
+              implMetadata: implMetadata
+            }
+            //stats.innerHTML += "sending metadatacontext/ ";
+            sendContextToTests(metadataContext);
+          } else if (context.command === "sendIntentMetadataToTests") {
+            await window.fdc3.addIntentListener("aTestingIntent", (context, metadata) => {
+              const metadataContext = {
+                type: "metadataContext",
+                contextMetadata: metadata
+              }
+              sendContextToTests(metadataContext);
+            });
+          }
+        });
     });
+
+    stats.innerHTML += "end/ ";
   </script>
 </body>
 
