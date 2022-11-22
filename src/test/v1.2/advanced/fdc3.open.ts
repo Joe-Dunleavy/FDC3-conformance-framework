@@ -1,9 +1,9 @@
-import { OpenError, Context, Channel, Listener } from "fdc3_1_2";
+import { OpenError, Context, Channel, Listener, getOrCreateChannel } from "fdc3_1_2";
 import { assert, expect } from "chai";
 import APIDocumentation from "../../../apiDocuments";
 import constants from "../../../constants";
 import { DesktopAgent } from "fdc3_1_2/dist/api/DesktopAgent";
-import { sleep, wait } from "../../../utils";
+import { sleep, wait, wrapPromise } from "../../../utils";
 
 declare let fdc3: DesktopAgent;
 
@@ -28,7 +28,6 @@ export default () =>
     const AOpensB1Test =
       "(AOpensB1) Can open app B from app A with no context and string as target";
     it(AOpensB1Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       const result = createReceiver("fdc3-conformance-opened");
       await fdc3.open(appBName);
       await result;
@@ -38,7 +37,6 @@ export default () =>
     const AOpensB2Test =
       "(AOpensB2) Can open app B from app A with no context and AppMetadata (name) as target";
     it(AOpensB2Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       const result = createReceiver("fdc3-conformance-opened");
       await fdc3.open({ name: appBName });
       await result;
@@ -48,7 +46,6 @@ export default () =>
     const AOpensB3Test =
       "(AOpensB3) Can open app B from app A with no context and AppMetadata (name and appId) as target";
     it(AOpensB3Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       const result = createReceiver("fdc3-conformance-opened");
       await fdc3.open({ name: appBName, appId: appBId });
       await result;
@@ -95,12 +92,14 @@ export default () =>
     const AOpensBWithSpecificContext1Test =
       "(AOpensBWithSpecificContext1) Can open app B from app A with context and string as target, app B adds specific listener";
     it(AOpensBWithSpecificContext1Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
+      
       const receiver = createReceiver("fdc3-conformance-context-received");
+      console.log("after receiver");
       await fdc3.open(appBName, {
         name: "context",
         type: "fdc3.testReceiver",
       });
+      console.log("after open");
       const receivedValue = (await receiver) as any;
       expect(receivedValue.context.name).to.eq("context", openDocs);
       expect(receivedValue.context.type).to.eq("fdc3.testReceiver", openDocs);
@@ -110,7 +109,6 @@ export default () =>
     const AOpensBWithSpecificContext2Test =
       "(AOpensBWithSpecificContext2) Can open app B from app A with context and AppMetadata (name) as target, app B adds specific listener";
     it(AOpensBWithSpecificContext2Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       const receiver = createReceiver("fdc3-conformance-context-received");
       await fdc3.open(
         { name: appBName },
@@ -125,7 +123,6 @@ export default () =>
     const AOpensBWithSpecificContext3Test =
       "(AOpensBWithSpecificContext3) Can open app B from app A with context and AppMetadata (name and appId) as target, app B adds specific listener";
     it(AOpensBWithSpecificContext3Test, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       const receiver = createReceiver("fdc3-conformance-context-received");
       await fdc3.open(
         { name: appBName, appId: appBId },
@@ -140,7 +137,6 @@ export default () =>
     const AOpensBWithContext1Test =
       "(AOpensBWithContext1) Can open app B from app A with context and string as target, app B adds generic listener";
     it(AOpensBWithContext1Test, async () => {
-      await fdc3.joinChannel("fdc3.raiseIntent");
       const receiver = createReceiver("fdc3-conformance-context-received");
       await fdc3.open(genericListenerAppName, {
         name: "context",
@@ -158,7 +154,6 @@ export default () =>
     const AOpensBWithContext2Test =
       "(AOpensBWithContext2) Can open app B from app A with context and AppMetadata (name) as target, app B adds generic listener";
     it(AOpensBWithContext2Test, async () => {
-      await fdc3.joinChannel("fdc3.raiseIntent");
       const receiver = createReceiver("fdc3-conformance-context-received");
       await fdc3.open(
         { name: genericListenerAppName },
@@ -176,7 +171,6 @@ export default () =>
     const AOpensBWithContext3Test =
       "(AOpensBWithContext3) Can open app B from app A with context and AppMetadata (name and appId) as target, app B adds generic listener";
     it(AOpensBWithContext3Test, async () => {
-      await fdc3.joinChannel("fdc3.raiseIntent");
       const receiver = createReceiver("fdc3-conformance-context-received");
       await fdc3.open(
         { name: genericListenerAppName, appId: genericListenerAppId },
@@ -194,7 +188,6 @@ export default () =>
     const AOpensBWithWrongContextTest =
       "(AOpensBWithWrongContext) Receive AppTimeout error when targeting app with wrong context";
     it(AOpensBWithWrongContextTest, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
       try {
         await fdc3.open(
           { name: appBName },
@@ -210,7 +203,6 @@ export default () =>
     const AOpensBNoListenTest =
       "(AOpensBNoListen) Receive AppTimeout error when targeting app with no listeners";
     it(AOpensBNoListenTest, async () => {
-      await fdc3.joinChannel("fdc3.raiseIntent");
       try {
         await fdc3.open(
           { name: noListenerAppName, appId: noListenerAppId },
@@ -226,10 +218,7 @@ export default () =>
     const AOpensBMultipleListenTest =
       "(AOpensBMultipleListen) Can open app B from app A with context and AppMetadata (name and appId) as target, app B has opened multiple listeners";
     it(AOpensBMultipleListenTest, async () => {
-      await fdc3.joinChannel("FDC3-Conformance-Channel");
-      const receiver = createReceiver(
-        "fdc3-conformance-context-received-multiple"
-      );
+      const receiver = createReceiver("fdc3-conformance-context-received-multiple");
       await fdc3.open(
         { name: appBName, appId: appBId },
         { name: "context", type: "fdc3.testReceiverMultiple" }
@@ -242,19 +231,21 @@ export default () =>
       );
       await closeAppWindows(AOpensBMultipleListenTest);
     });
-  });
+   });
 
 // creates a channel and subscribes for broadcast contexts. This is
 // used by the 'mock app' to send messages back to the test runner for validation
-const createReceiver = (contextType: string) => {
+const createReceiver = async (contextType: string) => {
+  const appControlChannel = await getOrCreateChannel("app-control");
   let timeout;
+  const wrapper = wrapPromise()
   const messageReceived = new Promise<Context>(async (resolve, reject) => {
-    const listener = fdc3.addContextListener(contextType, (context) => {
+    const listener = appControlChannel.addContextListener(contextType, (context) => {
       resolve(context);
       clearTimeout(timeout);
       listener.unsubscribe();
     });
-
+    console.log("waiting for context in test");
     //if no context received reject promise
     const { promise: thePromise, timeout: theTimeout } = sleep();
     timeout = theTimeout;

@@ -1,8 +1,8 @@
 {
   "applications": [
     {
-      "appId": "Conformance1",
-      "name": "Conformance1",
+      "appId": "Conformance",
+      "name": "Conformance",
       "title": "FDC3 1.2 Conformance Framework",
       "description": "Testing Conformance",
       "type": "web",
