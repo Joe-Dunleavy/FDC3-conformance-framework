@@ -119,44 +119,45 @@ export default () =>
     });
 
     it("(IntentAppDMultiple2) Should find intent 'sharedTestingIntent1' belonging to multiple apps (intent-a & intent-b) filtered by specific context 'testContextX'", async () => {
-      const appIntent = await fdc3.findIntent("sharedTestingIntent1", {
-        type: "testContextX",
-      });
-      expect(appIntent.intent).to.deep.eq(
-        {
-          name: "sharedTestingIntent1",
-          displayName: "Shared Testing Intent",
-        },
-        findIntentDocs
-      );
-      expect(appIntent.apps).to.have.length(2, findIntentDocs);
-      expect(appIntent.apps[0]).to.have.property(
-        "name",
-        "IntentAppA",
-        findIntentDocs
-      );
-      expect(appIntent.apps[1]).to.have.property(
-        "name",
-        "IntentAppB",
-        findIntentDocs
-      );
-    });
-
-    it("(IntentAppDMultiple3) Should find intent 'sharedTestingIntent1' belonging to app 'intent-b' when filtered by specific context 'testContextY'", async () => {
-      const appIntent = await fdc3.findIntent("sharedTestingIntent1", {
+      const appIntent = await fdc3.findIntent("sharedTestingIntent2", {
         type: "testContextY",
       });
       expect(appIntent.intent).to.deep.eq(
         {
-          name: "sharedTestingIntent1",
+          name: "sharedTestingIntent2",
           displayName: "Shared Testing Intent",
         },
         findIntentDocs
       );
-      expect(appIntent.apps).to.have.length(1, findIntentDocs);
+      expect(appIntent.apps).to.have.length(6, findIntentDocs);
       expect(appIntent.apps[0]).to.have.property(
-        "name",
-        "IntentAppB",
+        "appId",
+        "IntentAppDId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[1]).to.have.property(
+        "appId",
+        "IntentAppEId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[2]).to.have.property(
+        "appId",
+        "IntentAppFId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[3]).to.have.property(
+        "appId",
+        "IntentAppGId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[4]).to.have.property(
+        "appId",
+        "IntentAppHId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[5]).to.have.property(
+        "appId",
+        "IntentAppIId",
         findIntentDocs
       );
     });
