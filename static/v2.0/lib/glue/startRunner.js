@@ -206,6 +206,174 @@
 					]
 				},
 				{
+					"name": "IntentAppDId",
+					"title": "Intent App D",
+					"description": "Testing find intent D",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-d",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppEId",
+					"title": "Intent App E",
+					"description": "Testing find intent E",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-e",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppFId",
+					"title": "Intent App F",
+					"description": "Testing find intent F",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-f",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppGId",
+					"title": "Intent App G",
+					"description": "Testing find intent G",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-g",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppHId",
+					"title": "Intent App H",
+					"description": "Testing find intent H",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-h",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppIId",
+					"title": "Intent App I",
+					"description": "Testing find intent I",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-i",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "sharedTestingIntent2",
+							"displayName": "Shared Testing Intent",
+							"contexts": ["testContextY"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppJId",
+					"title": "Intent App J",
+					"description": "Testing find intent J",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-j",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "privateChannelIIsPrivate",
+							"displayName": "J Testing Intent",
+							"contexts": ["privateChannelId"]
+						}
+					]
+				},
+				{
+					"name": "IntentAppKId",
+					"title": "Intent App K",
+					"description": "Testing find intent K",
+					"type": "window",
+					"details": {
+						"url": "http://localhost:3001/v2.0/intent-k",
+						"top": 100,
+						"left": 100,
+						"width": 800,
+						"height": 600,
+						"icon": "http://localhost:3102/scott-logic-icon-256.png"
+					},
+					"intents": [
+						{
+							"name": "kTestingIntent",
+							"displayName": "K Testing Intent",
+							"contexts": ["testContextX"]
+						}
+					]
+				},
+				{
 					"name": "ChannelsAppId",
 					"title": "Channels App",
 					"description": "Testing channels app",

@@ -76,7 +76,7 @@ export default () =>
       }
     });
 
-    it("(2.0-FindIntentAppDMultiple1) Should find intent 'sharedTestingIntent1' belonging to multiple apps (intent-a & intent-b)", async () => {
+    it("(2.0-FindIntentAppDMultiple1) Should find intent 'sharedTestingIntent2' belonging to multiple apps (intent-a & intent-b)", async () => {
       const appIntent = await fdc3.findIntent("sharedTestingIntent2");
       expect(appIntent.intent).to.deep.eq(
         {
@@ -96,22 +96,22 @@ export default () =>
         "IntentAppEId",
         findIntentDocs
       );
-      expect(appIntent.apps[1]).to.have.property(
+      expect(appIntent.apps[2]).to.have.property(
         "appId",
         "IntentAppFId",
         findIntentDocs
       );
-      expect(appIntent.apps[1]).to.have.property(
+      expect(appIntent.apps[3]).to.have.property(
         "appId",
         "IntentAppGId",
         findIntentDocs
       );
-      expect(appIntent.apps[1]).to.have.property(
+      expect(appIntent.apps[4]).to.have.property(
         "appId",
         "IntentAppHId",
         findIntentDocs
       );
-      expect(appIntent.apps[1]).to.have.property(
+      expect(appIntent.apps[5]).to.have.property(
         "appId",
         "IntentAppIId",
         findIntentDocs
