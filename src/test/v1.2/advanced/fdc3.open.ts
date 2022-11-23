@@ -198,22 +198,7 @@ export default () =>
         expect(ex).to.have.property("message", OpenError.AppTimeout, openDocs);
       }
       await closeAppWindows(AOpensBWithWrongContextTest);
-    });
-
-    const AOpensBNoListenTest =
-      "(AOpensBNoListen) Receive AppTimeout error when targeting app with no listeners";
-    it(AOpensBNoListenTest, async () => {
-      try {
-        await fdc3.open(
-          { name: noListenerAppName, appId: noListenerAppId },
-          { name: "context", type: "fdc3.testReceiver" }
-        );
-        assert.fail("No error was not thrown", openDocs);
-      } catch (ex) {
-        expect(ex).to.have.property("message", OpenError.AppTimeout, openDocs);
-      }
-      await closeAppWindows(AOpensBNoListenTest);
-    });
+    }).timeout(constants.AppTimeout);
 
     const AOpensBMultipleListenTest =
       "(AOpensBMultipleListen) Can open app B from app A with context and AppMetadata (name and appId) as target, app B has opened multiple listeners";
@@ -231,7 +216,23 @@ export default () =>
       );
       await closeAppWindows(AOpensBMultipleListenTest);
     });
-   });
+
+
+    const AOpensBNoListenTest =
+      "(AOpensBNoListen) Receive AppTimeout error when targeting app with no listeners";
+    it(AOpensBNoListenTest, async () => {
+      try {
+        await fdc3.open(
+          { name: noListenerAppName, appId: noListenerAppId },
+          { name: "context", type: "fdc3.testReceiver" }
+        );
+        assert.fail("No error was not thrown", openDocs);
+      } catch (ex) {
+        expect(ex).to.have.property("message", OpenError.AppTimeout, openDocs);
+        await closeAppWindows(AOpensBWithWrongContextTest);
+      }
+    }).timeout(constants.AppTimeout);
+  });
 
 // creates a channel and subscribes for broadcast contexts. This is
 // used by the 'mock app' to send messages back to the test runner for validation
