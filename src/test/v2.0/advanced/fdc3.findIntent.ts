@@ -1,7 +1,7 @@
-import { ResolveError } from "fdc3_1_2";
+import { ResolveError } from "fdc3_2_0";
 import { assert, expect } from "chai";
 import APIDocumentation from "../../../apiDocuments";
-import { DesktopAgent } from "fdc3_1_2/dist/api/DesktopAgent";
+import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
 
 declare let fdc3: DesktopAgent;
 const findIntentDocs =
@@ -21,7 +21,7 @@ export default () =>
         },
         findIntentDocs
       );
-      expect(appIntent.apps).to.have.length(1, findIntentDocs);
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(1, findIntentDocs);
       expect(appIntent.apps[0]).to.have.property(
         "appId",
         "IntentAppAId",
@@ -53,7 +53,7 @@ export default () =>
         },
         findIntentDocs
       );
-      expect(appIntent.apps).to.have.length(1, findIntentDocs);
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(1, findIntentDocs);
       expect(appIntent.apps[0]).to.have.property(
         "appId",
         "IntentAppAId",
@@ -85,7 +85,7 @@ export default () =>
         },
         findIntentDocs
       );
-      expect(appIntent.apps).to.have.length(6, findIntentDocs);
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(6, findIntentDocs);
       expect(appIntent.apps[0]).to.have.property(
         "appId",
         "IntentAppDId",
@@ -129,7 +129,7 @@ export default () =>
         },
         findIntentDocs
       );
-      expect(appIntent.apps).to.have.length(6, findIntentDocs);
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(6, findIntentDocs);
       expect(appIntent.apps[0]).to.have.property(
         "appId",
         "IntentAppDId",
@@ -158,6 +158,104 @@ export default () =>
       expect(appIntent.apps[5]).to.have.property(
         "appId",
         "IntentAppIId",
+        findIntentDocs
+      );
+    });
+
+    it("(2.0-FindIntentAppDByResultSingle) Should find intent 'cTestingIntent' belonging only to app intent-c with context 'testContextX' and result type 'testContextZ'", async () => {
+      const appIntent = await fdc3.findIntent("cTestingIntent", {
+        type: "testContextX",
+      }, "testContextZ");
+      expect(appIntent.intent).to.deep.eq(
+        {
+          name: "cTestingIntent",
+          displayName: "C Testing Intent",
+        },
+        findIntentDocs
+      );
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(1, findIntentDocs);
+      expect(appIntent.apps[0]).to.have.property(
+        "appId",
+        "IntentAppCId",
+        findIntentDocs
+      );
+    });
+
+    it("(2.0-FindIntentAppDByResultSingleNullContext) Should find intent 'cTestingIntent' belonging only to app intent-c with a null context and result type 'testContextZ'", async () => {
+      const appIntent = await fdc3.findIntent("cTestingIntent", null, "testContextZ");
+      expect(appIntent.intent).to.deep.eq(
+        {
+          name: "cTestingIntent",
+          displayName: "C Testing Intent",
+        },
+        findIntentDocs
+      );
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(1, findIntentDocs);
+      expect(appIntent.apps[0]).to.have.property(
+        "appId",
+        "IntentAppCId",
+        findIntentDocs
+      );
+    });
+
+    it("(2.0-FindIntentAppDByResultMultiple) Should find intent 'sharedTestingIntent1' belonging only to app intent-b with context 'testContextX' and result type 'testContextY'", async () => {
+      const appIntent = await fdc3.findIntent("sharedTestingIntent1", {type: "testContextX"}, "testContextY");
+      expect(appIntent.intent).to.deep.eq(
+        {
+          name: "sharedTestingIntent1",
+          displayName: "Shared Testing Intent",
+        },
+        findIntentDocs
+      );
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(2, findIntentDocs);
+      expect(appIntent.apps[0]).to.have.property(
+        "appId",
+        "IntentAppAId",
+        findIntentDocs
+      );
+      expect(appIntent.apps[1]).to.have.property(
+        "appId",
+        "IntentAppBId",
+        findIntentDocs
+      );
+    });
+
+    it("(2.0-FindIntentAppDByResultChannel1) Should find intent 'sharedTestingIntent2' belonging only to apps intent-e and itent-f with context 'testContextY' and result type 'channel", async () => {
+      const appIntent = await fdc3.findIntent("sharedTestingIntent2", {type: "testContextY"}, "channel");
+      expect(appIntent.intent).to.deep.eq(
+        {
+          name: "sharedTestingIntent2",
+          displayName: "Shared Testing Intent",
+        },
+        findIntentDocs
+      );
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(2, findIntentDocs);
+      expect(appIntent.apps[0]).to.have.property(
+        "appId",
+        "IntentAppEId",
+        findIntentDocs
+      );
+
+      expect(appIntent.apps[1]).to.have.property(
+        "appId",
+        "IntentAppFId",
+        findIntentDocs
+      );
+    });
+
+    it("(2.0-FindIntentAppDByResultChannel2) Should find intent 'sharedTestingIntent2' belonging only to app intent-c with context 'testContextY' and result type 'channel<testContextZ>'", async () => {
+      const appIntent = await fdc3.findIntent("sharedTestingIntent2", {type: "testContextY"}, "channel<testContextZ>");
+      expect(appIntent.intent).to.deep.eq(
+        {
+          name: "sharedTestingIntent2",
+          displayName: "Shared Testing Intent",
+        },
+        findIntentDocs
+      );
+      expect(appIntent.apps, "Unexpected AppIntent.apps.length").to.have.length(1, findIntentDocs);
+      expect(appIntent.apps[0]).to.have.property(
+        "appId",
+        "IntentAppFId",
         findIntentDocs
       );
     });

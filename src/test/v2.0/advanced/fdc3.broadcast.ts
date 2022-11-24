@@ -4,6 +4,7 @@ import constants from "../../../constants";
 import APIDocumentation from "../../../apiDocuments";
 import { DesktopAgent } from "fdc3_2_0/dist/api/DesktopAgent";
 import { sleep, wait } from "../../../utils";
+import { getOrCreateChannel } from "fdc3_1_2";
 
 declare let fdc3: DesktopAgent;
 const documentation =

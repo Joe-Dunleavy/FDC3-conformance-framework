@@ -154,7 +154,7 @@
 						{
 							"name": "sharedTestingIntent1",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextX"]
+							"contexts": ["testContextX"],
 						}
 					]
 				},
@@ -180,7 +180,8 @@
 						{
 							"name": "sharedTestingIntent1",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextX", "testContextY"]
+							"contexts": ["testContextX", "testContextY"],
+              "resultType": "testContextY"
 						}
 					]
 				},
@@ -201,7 +202,8 @@
 						{
 							"name": "cTestingIntent",
 							"displayName": "C Testing Intent",
-							"contexts": ["testContextX"]
+							"contexts": ["testContextX"],
+              "resultType": "testContextZ"
 						}
 					]
 				},
@@ -222,7 +224,8 @@
 						{
 							"name": "sharedTestingIntent2",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextY"]
+							"contexts": ["testContextY"],
+              "resultType": "testContextZ"
 						}
 					]
 				},
@@ -243,7 +246,8 @@
 						{
 							"name": "sharedTestingIntent2",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextY"]
+							"contexts": ["testContextY"],
+              "resultType": "channel"
 						}
 					]
 				},
@@ -264,7 +268,8 @@
 						{
 							"name": "sharedTestingIntent2",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextY"]
+							"contexts": ["testContextY"],
+              "resultType": "channel<testContextZ>"
 						}
 					]
 				},
@@ -306,7 +311,8 @@
 						{
 							"name": "sharedTestingIntent2",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextY"]
+							"contexts": ["testContextY"],
+              "resultType": "testContextZ"
 						}
 					]
 				},
@@ -327,7 +333,8 @@
 						{
 							"name": "sharedTestingIntent2",
 							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextY"]
+							"contexts": ["testContextY"],
+              "resultType": "testContextZ"
 						}
 					]
 				},
@@ -348,7 +355,8 @@
 						{
 							"name": "privateChannelIIsPrivate",
 							"displayName": "J Testing Intent",
-							"contexts": ["privateChannelId"]
+							"contexts": ["privateChannelId"],
+              "resultType": "privateChannelIsPrivateResult"
 						}
 					]
 				},
@@ -369,7 +377,8 @@
 						{
 							"name": "kTestingIntent",
 							"displayName": "K Testing Intent",
-							"contexts": ["testContextX"]
+							"contexts": ["testContextX"],
+              "resultType": "channel<testContextZ>"
 						}
 					]
 				},

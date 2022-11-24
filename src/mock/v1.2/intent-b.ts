@@ -9,11 +9,12 @@ onFdc3Ready().then(async () => {
         return context;
     });
     fdc3.addIntentListener('sharedTestingIntent1', async (context) => {
+        
         return context;
     });
 
     //broadcast that intent-a has opened
     await sendContextToTests({
-        type: "fdc3-intent-a-opened"
+        type: "fdc3-intent-b-opened"
     });
 });
