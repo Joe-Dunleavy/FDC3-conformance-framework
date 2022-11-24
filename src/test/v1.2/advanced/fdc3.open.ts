@@ -207,22 +207,6 @@ export default () =>
       await closeAppWindows(AOpensBWithWrongContextTest);
     });
 
-    const AOpensBNoListenTest =
-      "(AOpensBNoListen) Receive AppTimeout error when targeting app with no listeners";
-    it(AOpensBNoListenTest, async () => {
-      await fdc3.joinChannel("fdc3.raiseIntent");
-      try {
-        await fdc3.open(
-          { name: noListenerAppName, appId: noListenerAppId },
-          { name: "context", type: "fdc3.testReceiver" }
-        );
-        assert.fail("No error was not thrown", openDocs);
-      } catch (ex) {
-        expect(ex).to.have.property("message", OpenError.AppTimeout, openDocs);
-      }
-      await closeAppWindows(AOpensBNoListenTest);
-    });
-
     const AOpensBMultipleListenTest =
       "(AOpensBMultipleListen) Can open app B from app A with context and AppMetadata (name and appId) as target, app B has opened multiple listeners";
     it(AOpensBMultipleListenTest, async () => {
@@ -241,6 +225,22 @@ export default () =>
         openDocs
       );
       await closeAppWindows(AOpensBMultipleListenTest);
+    });
+
+
+    const AOpensBNoListenTest =
+      "(AOpensBNoListen) Receive AppTimeout error when targeting app with no listeners";
+    it(AOpensBNoListenTest, async () => {
+      try {
+        await fdc3.open(
+          { name: noListenerAppName, appId: noListenerAppId },
+          { name: "context", type: "fdc3.testReceiver" }
+        );
+        assert.fail("No error was not thrown", openDocs);
+      } catch (ex) {
+        expect(ex).to.have.property("message", OpenError.AppTimeout, openDocs);
+        await closeAppWindows(AOpensBWithWrongContextTest);
+      }
     });
   });
 

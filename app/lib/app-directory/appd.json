@@ -1,0 +1,17 @@
+[
+	{
+		"name": "conformance",
+		"title": "FDC3 conformance framework",
+		"type": "window",
+		"details": {
+			"url": "http://localhost:3000/index.html",
+			"autoInjectFdc3": {
+				"enabled": true
+			},
+			"fdc3InitsGlue": true,
+			"mode": "html",
+			"width": 500,
+			"height": 400
+		}
+	}
+]

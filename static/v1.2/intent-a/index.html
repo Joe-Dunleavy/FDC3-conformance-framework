@@ -21,10 +21,9 @@
         return context;
       });
 
-      window.fdc3.joinChannel("fdc3.raiseIntent").then(() => {
-        window.fdc3.broadcast({
-          type: "fdc3-intent-a-opened",
-        });
+      const appControlChannel = await getOrCreateChannel("app-control");
+      appControlChannel.broadcast({
+        type: "fdc3-intent-a-opened",
       });
     });
   </script>
