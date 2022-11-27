@@ -2,9 +2,7 @@ import { closeWindowOnCompletion, onFdc3Ready, sendContextToTests } from './mock
 import { Context, DesktopAgent } from 'fdc3_2_0';
 declare let fdc3: DesktopAgent
 
-onFdc3Ready().then(async () => {
-    await closeWindowOnCompletion();
-  
+onFdc3Ready().then(async () => {  
     const appControlChannel = await window.fdc3.getOrCreateChannel("app-control");
     // broadcast that this app has opened
     appControlChannel.broadcast({

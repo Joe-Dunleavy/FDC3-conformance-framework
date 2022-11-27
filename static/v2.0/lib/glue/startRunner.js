@@ -120,7 +120,7 @@
 		const applications = {
 			local: [
 				{
-					"name": "MockApp",
+					"name": "MockAppId",
 					"title": "Mock App",
 					"description": "Testing spec conformance",
 					"type": "window",
@@ -133,31 +133,31 @@
 						"icon": "http://localhost:3000/scott-logic-icon-256.png"
 					}
 				},
-				{
-					"name": "IntentAppAId",
-					"title": "Intent App A",
-					"type": "window",
-					"details": {
-						"url": "http://localhost:3001/v2.0/intent-a",
-						"top": 100,
-						"left": 100,
-						"width": 800,
-						"height": 600,
-						"icon": "http://localhost:3000/scott-logic-icon-256.png"
-					},
-					"intents": [
-						{
-							"name": "aTestingIntent",
-							"displayName": "A Testing Intent",
-							"contexts": ["testContextX", "testContextZ"]
-						},
-						{
-							"name": "sharedTestingIntent1",
-							"displayName": "Shared Testing Intent",
-							"contexts": ["testContextX"],
-						}
-					]
-				},
+				// {
+				// 	"name": "IntentAppAId",
+				// 	"title": "Intent App A",
+				// 	"type": "window",
+				// 	"details": {
+				// 		"url": "http://localhost:3001/v2.0/intent-a",
+				// 		"top": 100,
+				// 		"left": 100,
+				// 		"width": 800,
+				// 		"height": 600,
+				// 		"icon": "http://localhost:3000/scott-logic-icon-256.png"
+				// 	},
+				// 	"intents": [
+				// 		{
+				// 			"name": "aTestingIntent",
+				// 			"displayName": "A Testing Intent",
+				// 			"contexts": ["testContextZ"]
+				// 		},
+				// 		{
+				// 			"name": "sharedTestingIntent1",
+				// 			"displayName": "Shared Testing Intent",
+				// 			"contexts": ["testContextX"],
+				// 		}
+				// 	]
+				// },
 				{
 					"name": "IntentAppBId",
 					"title": "Intent App B",
