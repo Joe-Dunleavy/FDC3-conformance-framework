@@ -17,7 +17,7 @@ import APIDocumentation from "../../../apiDocuments";
 import constants from "../../../constants";
 import { sleep, wait, wrapPromise } from "../../../utils";
 import { addContextListener } from "fdc3_1_2";
-import { IntegerStreamContext, IntentKContext } from "../../../mock/v2.0/intent-k";
+import { IntentKContext } from "../../../mock/v2.0/intent-k";
 
 declare let fdc3: DesktopAgent;
 const raiseIntentDocs =
