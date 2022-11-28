@@ -17,6 +17,7 @@ import APIDocumentation from "../../../apiDocuments";
 import constants from "../../../constants";
 import { sleep, wait, wrapPromise } from "../../../utils";
 import { addContextListener } from "fdc3_1_2";
+import { IntegerStreamContext, IntentKContext } from "../../../mock/v2.0/intent-k";
 
 declare let fdc3: DesktopAgent;
 const raiseIntentDocs =
@@ -640,9 +641,47 @@ export default () =>
 
       const privChannel = <PrivateChannel>result;
 
-      const listener1 = privChannel.addContextListener("testContextZ", ()=>{});
+      let numberStream = 1;
+      let timeout;
+      const wrapper = wrapPromise();
 
-      ////stopped at K
+      //receive multiple contexts in succession from intent-k
+      const listener = await privChannel.addContextListener("testContextZ", (context: IntentKContext)=>{
+        expect(context.number).to.be.equal(numberStream);
+        numberStream += 1;
+        expect(context.type).to.be.equal("testContextZ");
+
+        if(numberStream === 5){
+          wrapper.resolve;
+          clearTimeout(timeout);
+        }
+      });
+
+      timeout = await window.setTimeout(() => {
+        wrapper.reject("test timed-out while listening for five contexts to be broadcast from the intent-k app in short succession");
+      }, constants.WaitTime);
+
+      await wrapper.promise;
+
+      //unsubscribe the listener
+      listener.unsubscribe();
+      let timeout2;
+      const wrapper2 = wrapPromise();
+
+      const listener2 = await privChannel.addContextListener("testContextZ", (context: IntentKContext)=>{
+        expect(context.onUnsubscribedTriggered).to.be.equal(true);
+        wrapper2.resolve;
+        clearTimeout(timeout2);
+      });
+
+      timeout2 = await window.setTimeout(() => {
+        wrapper.reject("test timed-out while awaiting confirmation that onUnsubscribe was triggered");
+      }, constants.WaitTime);
+
+      await wrapper.resolve;
+
+      //step 14
+
     });
   });
 
