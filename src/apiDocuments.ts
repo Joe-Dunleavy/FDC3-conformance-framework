@@ -27,6 +27,7 @@ const APIDocumentation = {
   open: "https://fdc3.finos.org/docs/1.2/api/ref/DesktopAgent#open",
   raiseIntent:
     "https://fdc3.finos.org/docs/1.2/api/ref/DesktopAgent#raiseintent",
+  raiseIntent2_0: "https://fdc3.finos.org/docs/api/spec#raising-intents",
   raiseIntentForContext:
     "https://fdc3.finos.org/docs/1.2/api/ref/DesktopAgent#raiseintentforcontext",
   appMetadata: "https://fdc3.finos.org/docs/api/ref/Metadata#appmetadata",

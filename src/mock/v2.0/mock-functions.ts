@@ -33,5 +33,4 @@ export const sendContextToTests = async(context) =>{
     "app-control"
   );
   await appControlChannel.broadcast(context);
-  console.log("context sent app opened");
 }

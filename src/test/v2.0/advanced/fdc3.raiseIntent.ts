@@ -1,5 +1,4 @@
 import {
-  AppMetadata,
   Channel,
   Context,
   getOrCreateChannel,
@@ -8,7 +7,6 @@ import {
   AppIdentifier,
   ResolveError,
   DesktopAgent,
-  OpenError,
   ChannelError,
   PrivateChannel,
 } from "fdc3_2_0";
@@ -18,10 +16,12 @@ import constants from "../../../constants";
 import { sleep, wait, wrapPromise } from "../../../utils";
 import { addContextListener } from "fdc3_1_2";
 import { IntentKContext } from "../../../mock/v2.0/intent-k";
+import { IntentControl2_0 } from "./intent-support-2_0";
 
 declare let fdc3: DesktopAgent;
 const raiseIntentDocs =
   "\r\nDocumentation: " + APIDocumentation.raiseIntent + "\r\nCause";
+  const control = new IntentControl2_0();
 
 /**
  * Details on the mock apps used in these tests can be found in /mock/README.md
@@ -35,29 +35,23 @@ export default () =>
     const RaiseIntentSingleResolve =
       "(2.0-RaiseIntentSingleResolve) Should start app intent-a when raising intent 'aTestingIntent' with context 'testContextX'";
     it(RaiseIntentSingleResolve, async () => {
-      const result = createReceiver("fdc3-intent-a-opened");
-      const intentResolution = await fdc3.raiseIntent("aTestingIntent", {
-        type: "testContextX",
-      });
-      validateIntentResolution("IntentAppAId", intentResolution);
+      await control.listenForError();
+      const result = control.receiveContext("fdc3-intent-a-opened");
+      const intentResolution = await control.raiseIntent("aTestingIntent", "testContextX");
+      control.validateIntentResolution("IntentAppAId", intentResolution);
       await result;
-      await closeIntentAppsWindows(RaiseIntentSingleResolve);
+      await control.closeIntentAppWindow(RaiseIntentSingleResolve);
     });
 
     const RaiseIntentTargetedAppResolve =
       "(2.0-RaiseIntentTargetedAppResolve) Should start app intent-a when raising intent 'aTestingIntent' with context 'testContextX'";
     it(RaiseIntentTargetedAppResolve, async () => {
-      const result = createReceiver("fdc3-intent-a-opened");
-      const intentResolution = await fdc3.raiseIntent(
-        "sharedTestingIntent1",
-        {
-          type: "testContextX",
-        },
-        { appId: "IntentAppBId" }
-      );
+      await control.listenForError();
+      const result = control.receiveContext("fdc3-intent-a-opened");
+      const intentResolution = await control.raiseIntent("sharedTestingIntent1", "testContextX", "IntentAppBId");
       validateIntentResolution("IntentAppBId", intentResolution);
       await result;
-      await closeIntentAppsWindows(RaiseIntentTargetedAppResolve);
+      await control.closeIntentAppWindow(RaiseIntentTargetedAppResolve);
     });
 
     const RaiseIntentTargetedInstanceResolveOpen =
