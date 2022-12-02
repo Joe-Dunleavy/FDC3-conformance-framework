@@ -14,6 +14,8 @@ onFdc3Ready().then(async () => {
     // fdc3.addIntentListener('bTestingIntent', async (context) => {
     //     return context;
     // });
+
+    const wrapper = wrapPromise();
     let receivedContext: IntentAppBContext;
     await fdc3.addIntentListener(
       "sharedTestingIntent1",
