@@ -1,14 +1,14 @@
 import { assert, expect } from "chai";
 import { AppIdentifier, Channel, IntentResolution, Listener } from "fdc3_2_0";
 import { Context, DesktopAgent, getOrCreateChannel } from "fdc3_2_0";
-import APIDocumentation from "../../../apiDocuments";
+import { APIDocumentation2_0 } from "../apiDocuments-2.0";
 import constants from "../../../constants";
 import { sleep, wait } from "../../../utils";
 import { AppControlContext } from "../../common/channel-control";
 
 declare let fdc3: DesktopAgent;
 const raiseIntentDocs =
-  "\r\nDocumentation: " + APIDocumentation.raiseIntent2_0 + "\r\nCause";
+  "\r\nDocumentation: " + APIDocumentation2_0.raiseIntent + "\r\nCause";
 
 export class IntentControl2_0 {
   async receiveContext(contextType: string) {

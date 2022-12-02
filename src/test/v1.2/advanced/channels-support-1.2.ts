@@ -1,6 +1,5 @@
 import { assert, expect } from "chai";
-import { Channel, Context, Listener } from "fdc3_1_2";
-import { DesktopAgent } from "fdc3_1_2/dist/api/DesktopAgent";
+import { Channel, Context, DesktopAgent, Listener } from "fdc3_1_2";
 import constants from "../../../constants";
 import { sleep, wait } from "../../../utils";
 import { AppControlContext, ChannelControl, ChannelsAppConfig, ChannelsAppContext } from "../../common/channel-control";
@@ -8,10 +7,10 @@ import { AppControlContext, ChannelControl, ChannelsAppConfig, ChannelsAppContex
 
 declare let fdc3: DesktopAgent;
 
-let listener1, listener2: Listener
+let listener1: Listener, listener2: Listener
 
 export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
-
+  private readonly testAppChannelName = "test-channel";
 
   retrieveAndJoinChannel = async (
     channelNumber: number
@@ -38,34 +37,34 @@ export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
     }
   };
 
-  joinChannel = async (channel: Channel) => {
-    return fdc3.joinChannel(channel.id)
+  joinChannel = async (channel: Channel): Promise<void> => {
+    return await fdc3.joinChannel(channel.id)
   }
 
-
-  createTestChannel = async (name: string = "test-channel") => {
-    return fdc3.getOrCreateChannel(name);
+  createRandomTestChannel = async (): Promise<Channel> => {
+    const channelName = `${this.testAppChannelName}.${this.getRandomId()}`;
+    return fdc3.getOrCreateChannel(channelName);
   }
 
-  unsubscribeListeners = async () => {
+  unsubscribeListeners = (): void => {
     if (listener1 !== undefined) {
-      await listener1.unsubscribe();
+      listener1.unsubscribe();
       listener1 = undefined;
     }
 
     if (listener2 !== undefined) {
-      await listener2.unsubscribe();
+      listener2.unsubscribe();
       listener2 = undefined;
     }
   }
 
-  channelCleanUp = async () => {
-    await this.unsubscribeListeners();
+  channelCleanUp = async (): Promise<void> => {
+    this.unsubscribeListeners();
     await fdc3.leaveCurrentChannel();
   }
 
 
-  closeChannelsAppWindow = async (testId: string) => {
+  closeChannelsAppWindow = async (testId: string): Promise<void> => {
     //Tell ChannelsApp to close window
     const appControlChannel = await broadcastAppChannelCloseWindow(testId);
 
@@ -74,27 +73,25 @@ export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
     await wait(constants.WindowCloseWaitTime);
   }
 
-
-
-  initCompleteListener = async (testId: string) => {
-    return waitForContext(
+  initCompleteListener = async (testId: string) : Promise<Context>  => {
+    const receivedContext = await waitForContext(
       "executionComplete",
       testId,
       await fdc3.getOrCreateChannel("app-control")
     );
+    
+    await wait(constants.ShortWait)
+
+    return receivedContext;
   }
 
-  openChannelApp = async (testId: string, channelId: string | undefined, commands: string[], historyItems: number = undefined, notify: boolean = true) => {
+  openChannelApp = async (testId: string, channelId: string | undefined, commands: string[], historyItems: number = undefined, notify: boolean = true): Promise<void> => {
     const channelsAppConfig: ChannelsAppConfig = {
       fdc3ApiVersion: "1.2",
       testId: testId,
-      userChannelId: channelId,
+      channelId,
       notifyAppAOnCompletion: notify,
     };
-
-    if (channelId) {
-      channelsAppConfig.userChannelId = channelId;
-    }
 
     if (historyItems) {
       channelsAppConfig.historyItems = historyItems;
@@ -107,15 +104,19 @@ export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
     );
   }
 
-  setupAndValidateListener1 = (channel: Channel, expectedContextType: string, errorMessage: string, onComplete: (ctx: Context) => void) => {
+  setupAndValidateListener1 = (channel: Channel, listenContextType: string | null, expectedContextType: string | null, errorMessage: string, onComplete: (ctx: Context) => void): void => {
     if (channel) {
-      listener1 = channel.addContextListener(null, async (context) => {
-        expect(context.type).to.be.equals(expectedContextType, errorMessage);
+      listener1 = channel.addContextListener(listenContextType, (context) => {
+        if (expectedContextType != null) {
+          expect(context.type).to.be.equals(expectedContextType, errorMessage);
+        }
         onComplete(context);
       });
     } else {
-      listener1 = fdc3.addContextListener(null, async (context) => {
-        expect(context.type).to.be.equals(expectedContextType, errorMessage);
+      listener1 = fdc3.addContextListener(listenContextType, (context) => {
+        if (expectedContextType != null) {
+          expect(context.type).to.be.equals(expectedContextType, errorMessage);
+        }
         onComplete(context);
       });
     }
@@ -123,15 +124,19 @@ export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
     validateListenerObject(listener1);
   }
 
-  setupAndValidateListener2 = (channel: Channel, expectedContextType: string, errorMessage: string, onComplete: (ctx: Context) => void) => {
+  setupAndValidateListener2 = (channel: Channel, listenContextType: string | null, expectedContextType: string | null, errorMessage: string, onComplete: (ctx: Context) => void): void => {
     if (channel) {
-      listener2 = channel.addContextListener(null, async (context) => {
-        expect(context.type).to.be.equals(expectedContextType, errorMessage);
+      listener2 = channel.addContextListener(listenContextType, (context) => {
+        if (expectedContextType != null) {
+          expect(context.type).to.be.equals(expectedContextType, errorMessage);
+        }
         onComplete(context);
       });
     } else {
-      listener2 = fdc3.addContextListener(null, async (context) => {
-        expect(context.type).to.be.equals(expectedContextType, errorMessage);
+      listener2 = fdc3.addContextListener(listenContextType, (context) => {
+        if (expectedContextType != null) {
+          expect(context.type).to.be.equals(expectedContextType, errorMessage);
+        }
         onComplete(context);
       });
     }
@@ -139,15 +144,19 @@ export class ChannelControl1_2 implements ChannelControl<Channel, Context> {
     validateListenerObject(listener2);
   }
 
-  setupContextChecker = async (channel: Channel, expectedContextType: string, errorMessage: string, onComplete: (ctx: Context) => void) => {
+  setupContextChecker = async (channel: Channel,  requestedContextType: string, expectedContextType: string, errorMessage: string, onComplete: (ctx: Context) => void): Promise<void> => {
     //Retrieve current context from channel
-    await channel.getCurrentContext().then(async (context) => {
-      expect(context.type).to.be.equals(expectedContextType, errorMessage);
-      onComplete(context);
-    });
+    const context = (requestedContextType == undefined) ? await channel.getCurrentContext() : await channel.getCurrentContext(requestedContextType);
+
+    expect(context.type).to.be.equals(expectedContextType, errorMessage);
+    onComplete(context);
   }
 
+  getRandomId(): string {
+    const uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0];
 
+    return uint32.toString(16);
+  }
 
 }
 
@@ -163,7 +172,7 @@ function validateListenerObject(listenerObject) {
   );
 }
 
-const broadcastAppChannelCloseWindow = async (testId: string) => {
+const broadcastAppChannelCloseWindow = async (testId: string): Promise<Channel> => {
   const appControlChannel = await fdc3.getOrCreateChannel("app-control");
   /* tslint:disable-next-line */
   const closeContext: AppControlContext = {
@@ -173,7 +182,6 @@ const broadcastAppChannelCloseWindow = async (testId: string) => {
   appControlChannel.broadcast(closeContext);
   return appControlChannel;
 };
-
 
 const waitForContext = (
   contextType: string,
@@ -258,7 +266,7 @@ const waitForContext = (
 };
 
 
-function buildChannelsAppContext(
+export function buildChannelsAppContext(
   mockAppCommands: string[],
   config: ChannelsAppConfig
 ): ChannelsAppContext {
@@ -270,7 +278,7 @@ function buildChannelsAppContext(
       testId: config.testId,
       notifyAppAOnCompletion: config.notifyAppAOnCompletion ?? false,
       historyItems: config.historyItems ?? 1,
-      userChannelId: config.userChannelId ?? null,
+      channelId: config.channelId,
     },
   };
 }
