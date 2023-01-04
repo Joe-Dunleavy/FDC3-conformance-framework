@@ -10,7 +10,7 @@ onFdc3Ready().then(async () => {
   //AOpensBMultipleListen & AOpensBMalformedContext: this should never get hit
   await fdc3.addContextListener("fdc3.contact", async (context) => {
     let errorMessage;
-    if (context.type === "fdc3.intrument") {
+    if (context.type === "fdc3.instrument") {
       errorMessage = "App B listener received fdc3.contact context. Expected fdc3.instrument";
     } else if (context.name === "this is a malformed context") {
       errorMessage = "App B listener received a malformed context";
